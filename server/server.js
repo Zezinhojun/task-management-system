@@ -2,9 +2,15 @@
 const express = require('express');
 const taskRoutes = require('./app/routes/taskRoutes');
 const mongoose = require('mongoose');
+// Crie uma instância do servidor Express
+const app = express();
 
 // Carregue as variáveis de ambiente do arquivo .env
 require("dotenv").config();
+
+// Configurar middlewares para processamento de corpo
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Conecte-se ao MongoDB usando a variável de ambiente CONNECTIONSTRING
 mongoose
@@ -20,8 +26,6 @@ mongoose
         console.error('Erro ao conectar ao MongoDB Atlas:', e);
     });
 
-// Crie uma instância do servidor Express
-const app = express();
 
 // Defina uma rota de teste
 app.get('/', (req, res) => {
