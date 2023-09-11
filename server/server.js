@@ -2,13 +2,11 @@
 const express = require('express');
 const taskRoutes = require('./app/routes/taskRoutes');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv'); // Importe o pacote dotenv
+
 // Carregue as variáveis de ambiente do arquivo .env
 require("dotenv").config();
 
 // Conecte-se ao MongoDB usando a variável de ambiente CONNECTIONSTRING
-console.log('CONNECTIONSTRING:', process.env.CONNECTIONSTRING);
-
 mongoose
     .connect(process.env.CONNECTIONSTRING, {
         useNewUrlParser: true,
