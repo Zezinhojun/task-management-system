@@ -1,9 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const Task = require('../models/task')
 const { body, validationResult } = require('express-validator');
 const taskController = require('../controllers/taskController');
+const userController = require('../controllers/userController');
+
+// Rota para registrar um novo usuário
+router.post('/register', userController.validateUserRegistration, userController.registerUser);
+
+// Rota para fazer login de usuário
+router.post('/login', userController.loginUser);
 // Rota para criar uma nova 
+
 
 router.post('/tasks', [
     // Validar o campo 'title'
@@ -28,5 +35,6 @@ router.put('/tasks/:id', taskController.updateTaskById);
 
 // Rota para excluir uma tarefa por ID
 router.delete('/tasks/:id', taskController.deleteTaskById);
+
 
 module.exports = router;

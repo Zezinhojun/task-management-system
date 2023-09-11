@@ -5,13 +5,22 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 
+const userController = {}
+
 // Registrar um novo usuário
-exports.registerUser = async (req, res) => {
+userController.registerUser = async (req, res) => {
     try {
         const { username, password } = req.body;
 
         // Verificar se o usuário já existe
         const existingUser = await User.findOne({ username });
+
+        // Usar express-validator para adicionar verificações de validação personalizadas
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
         if (existingUser) {
             return res.status(400).json({ message: 'Usuário já existe' });
@@ -34,8 +43,17 @@ exports.registerUser = async (req, res) => {
     }
 };
 
+userController.validateUserRegistration = [
+    body('username')
+        .notEmpty().withMessage('O nome de usuário não pode estar vazio')
+        .isLength({ min: 3, max: 15 }).withMessage('O nome de usuário deve ter entre 3 e 15 caracteres'),
+
+    body('password')
+        .isLength({ min: 3, max: 15 }).withMessage('A senha deve ter entre 3 e 15 caracteres'),
+];
+
 // Login de usuário
-exports.loginUser = async (req, res) => {
+userController.loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -61,3 +79,5 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+module.exports = userController
