@@ -43,11 +43,13 @@ taskController.getTaskById = async (req, res) => {
         const taskId = req.params.id;
         const task = await Task.findById(taskId); // Busque a tarefa pelo ID
         if (!task) {
-            return res.status(404).json({ error: 'Tarefa não encontrada' });
+            const error = new Error("Tarefa não encontrada")
+            error.statusCode = 404
+            throw error
         }
         res.json(task); // Responda com a tarefa encontrada
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -58,7 +60,9 @@ taskController.updateTaskById = async (req, res) => {
         const updates = req.body; // Dados de atualização da tarefa
         const task = await Task.findByIdAndUpdate(taskId, updates, { new: true });
         if (!task) {
-            return res.status(404).json({ error: 'Tarefa não encontrada' });
+            const error = new Error('Tarefa não encontrada')
+            error.statusCode = 404
+            throw error
         }
         res.json(task); // Responda com a tarefa atualizada
     } catch (err) {
@@ -72,11 +76,13 @@ taskController.deleteTaskById = async (req, res) => {
         const taskId = req.params.id;
         const task = await Task.findByIdAndRemove(taskId);
         if (!task) {
-            return res.status(404).json({ error: 'Tarefa não encontrada' });
+            const error = new Error('Tarefa não encontrada')
+            error.statusCode = 404
+            throw error
         }
         res.json({ message: 'Tarefa excluída com sucesso' });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 };
 
